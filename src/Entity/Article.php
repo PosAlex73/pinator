@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\TaskRepository;
+use App\Repository\ArticleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TaskRepository::class)]
-class Task
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
+class Article
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,20 +20,17 @@ class Task
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 16)]
+    #[ORM\Column(length: 1)]
     private ?string $status = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $startTime = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $stopTime = null;
 
     #[ORM\Column(length: 1)]
     private ?string $type = null;
 
-    #[ORM\ManyToOne(inversedBy: 'task')]
-    private ?Category $category = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $publishedDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdTime = null;
 
     public function getId(): ?int
     {
@@ -76,30 +73,6 @@ class Task
         return $this;
     }
 
-    public function getStartTime(): ?\DateTimeInterface
-    {
-        return $this->startTime;
-    }
-
-    public function setStartTime(\DateTimeInterface $startTime): self
-    {
-        $this->startTime = $startTime;
-
-        return $this;
-    }
-
-    public function getStopTime(): ?\DateTimeInterface
-    {
-        return $this->stopTime;
-    }
-
-    public function setStopTime(?\DateTimeInterface $stopTime): self
-    {
-        $this->stopTime = $stopTime;
-
-        return $this;
-    }
-
     public function getType(): ?string
     {
         return $this->type;
@@ -112,14 +85,26 @@ class Task
         return $this;
     }
 
-    public function getCategory(): ?Category
+    public function getPublishedDate(): ?\DateTimeInterface
     {
-        return $this->category;
+        return $this->publishedDate;
     }
 
-    public function setCategory(?Category $category): self
+    public function setPublishedDate(\DateTimeInterface $publishedDate): self
     {
-        $this->category = $category;
+        $this->publishedDate = $publishedDate;
+
+        return $this;
+    }
+
+    public function getCreatedTime(): ?\DateTimeInterface
+    {
+        return $this->createdTime;
+    }
+
+    public function setCreatedTime(\DateTimeInterface $createdTime): self
+    {
+        $this->createdTime = $createdTime;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,6 +29,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'dairy_user', targetEntity: Diary::class)]
+    private Collection $diary;
+
+    #[ORM\OneToOne(mappedBy: 'tuser', cascade: ['persist', 'remove'])]
+    private ?Thread $thread = null;
+
+    public function __construct()
+    {
+        $this->diary = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -96,5 +109,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Diary>
+     */
+    public function getDiary(): Collection
+    {
+        return $this->diary;
+    }
+
+    public function addDiary(Diary $diary): self
+    {
+        if (!$this->diary->contains($diary)) {
+            $this->diary->add($diary);
+            $diary->setDairyUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiary(Diary $diary): self
+    {
+        if ($this->diary->removeElement($diary)) {
+            // set the owning side to null (unless already changed)
+            if ($diary->getDairyUser() === $this) {
+                $diary->setDairyUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getThread(): ?Thread
+    {
+        return $this->thread;
+    }
+
+    public function setThread(?Thread $thread): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($thread === null && $this->thread !== null) {
+            $this->thread->setTuser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($thread !== null && $thread->getTuser() !== $this) {
+            $thread->setTuser($this);
+        }
+
+        $this->thread = $thread;
+
+        return $this;
     }
 }
