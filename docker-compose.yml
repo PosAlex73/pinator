@@ -2,6 +2,13 @@ version: '3'
 
 services:
 ###> doctrine/doctrine-bundle ###
+  adminer:
+    image: adminer
+    restart: always
+    links:
+      - database
+    ports:
+      - 8888:8080
   database:
     image: postgres:${POSTGRES_VERSION:-14}-alpine
     environment:
