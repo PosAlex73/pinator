@@ -36,6 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'tuser', cascade: ['persist', 'remove'])]
     private ?Thread $thread = null;
 
+    #[ORM\OneToOne(mappedBy: 'forUser', cascade: ['persist', 'remove'])]
+    private ?UserProfile $userProfile = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     public function __construct()
     {
         $this->diary = new ArrayCollection();
@@ -159,6 +165,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->thread = $thread;
+
+        return $this;
+    }
+
+    public function getUserProfile(): ?UserProfile
+    {
+        return $this->userProfile;
+    }
+
+    public function setUserProfile(UserProfile $userProfile): self
+    {
+        // set the owning side of the relation if necessary
+        if ($userProfile->getForUser() !== $this) {
+            $userProfile->setForUser($this);
+        }
+
+        $this->userProfile = $userProfile;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
