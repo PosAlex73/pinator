@@ -13,6 +13,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Security\Core\Role\Role;
 
 class UserCrudController extends AbstractCrudController
@@ -25,7 +26,11 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
+            IdField::new('id')->hideOnDetail(),
             EmailField::new('email'),
+            TextField::new('password')
+                ->setFormType(PasswordType::class),
+
             ArrayField::new('roles'),
             ChoiceField::new('status')->setChoices(UserStatuses::getAll()),
             ChoiceField::new('type')->setChoices(UserTypes::getAll())

@@ -37,6 +37,8 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Diaries', 'fa fa-home', Diary::class),
             MenuItem::linkToCrud('Categories', 'fa fa-home', Category::class),
             MenuItem::linkToCrud('Threads', 'fa fa-home', Thread::class),
+            MenuItem::linkToCrud('Articles', 'fa fa-home', Article::class),
+            MenuItem::linkToCrud('Diaries', 'fa fa-home', Diary::class),
         ];
     }
 }
